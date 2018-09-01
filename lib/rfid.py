@@ -37,7 +37,7 @@ class RFID:
         status, bits = self._driver.MFRC522_Request(self._driver.PICC_REQIDL);
 
         if status != self._driver.MI_OK:
-            return False
+            return None, None
 
         status, uid = self._driver.MFRC522_Anticoll()
         if status != self._driver.MI_OK:

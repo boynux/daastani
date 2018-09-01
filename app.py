@@ -35,24 +35,28 @@ s3 = session.client('s3', region_name='eu-central-1')
 
 
 def play(sender, uid, data):
-    obj = json.loads(data)
+    try:
+        obj = json.loads(data)
+    
+        if 'key' in obj:
+            signedUrl = s3.generate_presigned_url(
+                ClientMethod = "get_object",
+                ExpiresIn = 3600,
+                HttpMethod = 'GET',
+                Params = {
+                    "Bucket": "daastani",
+                    "Key": obj['key'],
+                    }
+                )
 
-    if 'key' in obj:
-        signedUrl = s3.generate_presigned_url(
-            ClientMethod = "get_object",
-            ExpiresIn = 3600,
-            HttpMethod = 'GET',
-            Params = {
-                "Bucket": "daastani",
-                "Key": obj['key'],
-                }
-            )
+            stream = Stream(signedUrl)
 
-        stream = Stream(signedUrl)
+            pygame.mixer.music.load(stream)
+            pygame.mixer.music.play()
+        else:
+            print("RFID tag is not valid!")
 
-        pygame.mixer.music.load(stream)
-        pygame.mixer.music.play()
-    else:
+    except ValueError:
         print("RFID tag is not valid!")
 
 
@@ -77,8 +81,8 @@ try:
     # rfid.onCardStillPresent += lambda sender, uid: print("Card %s is still there!" % uid)
     rfid.start()
 
-except Exception as e:
-    print(e)
+except Exception:
+    raise
 
 finally:
     GPIO.cleanup()
