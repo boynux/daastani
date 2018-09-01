@@ -1,26 +1,54 @@
 from __future__ import print_function
 
 import time
+import json
+import os
 
 import requests
+import boto3
 import RPi.GPIO as GPIO
 import MFRC522
 import pygame
 
 from lib import RFID, Stream
 
+AWS_IOT_CREDS_URL = os.environ['AWS_IOT_CREDS_URL']
+CERT_PEM_PATH = os.environ['CERT_PEM_PATH']
+CERT_KEY_PATH = os.environ['CERT_KEY_PATH']
 
 pygame.init()
 pygame.mixer.init()
 
+res = requests.get(AWS_IOT_CREDS_URL, cert=(CERT_PEM_PATH, CERT_KEY_PATH))
 
-UIDMap = {
-    556273207803: "http://niniban.com/files/fa/news/1395/2/21/124544_208.mp3"
-}
+creds = res.json()
+# Or via the Session
+session = boto3.Session(
+    aws_access_key_id=creds['credentials']['accessKeyId'],
+    aws_secret_access_key=creds['credentials']['secretAccessKey'],
+    aws_session_token=creds['credentials']['sessionToken']
+)
 
-def play(sender, uid):
-    if uid in UIDMap:
-        stream = Stream(UIDMap[uid])
+# s3resource = session.resource('s3')
+# bucket = s3resource.Bucket('daastani')
+s3 = session.client('s3', region_name='eu-central-1')
+
+
+def play(sender, uid, data):
+    obj = json.loads(data)
+
+    if 'key' in obj:
+        signedUrl = s3.generate_presigned_url(
+            ClientMethod = "get_object",
+            ExpiresIn = 3600,
+            HttpMethod = 'GET',
+            Params = {
+                "Bucket": "daastani",
+                "Key": obj['key'],
+                }
+            )
+
+        stream = Stream(signedUrl)
 
         pygame.mixer.music.load(stream)
         pygame.mixer.music.play()
@@ -36,8 +64,8 @@ try:
 
     rfid = RFID(driver)
 
-    def newCardDetected(sender, uid):
-        print("New card has detected: %s" % uid)
+    def newCardDetected(sender, uid, data):
+        print("New card has detected: %s (%s)" % (uid, data))
 
 
     rfid.onNewCardDetected += newCardDetected

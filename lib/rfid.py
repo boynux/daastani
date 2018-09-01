@@ -4,6 +4,10 @@ from lib.event import Event
 
 
 class RFID:
+
+    Key = [0xFF,0xFF,0xFF,0xFF,0xFF,0xFF]
+    BlockAddrs = [8, 9, 10]
+
     def __init__(self, driver):
         self._driver = driver
 
@@ -11,17 +15,15 @@ class RFID:
         self.onCardRemoved = Event()
         self.onCardStillPresent = Event()
 
-        self._waitForNewCard()
-
     def start(self):
         while True:
             time.sleep(0.1)  # replace with timer
 
-            uid = self._waitForNewCard()
+            uid, data = self._waitForNewCard()
             if not uid:
                 continue
 
-            self._newCardDetected(uid)
+            self._newCardDetected(uid, data)
             while True:
                 if self._checkIfCardPresent():
                     self._cardStillPresent(uid)
@@ -41,7 +43,21 @@ class RFID:
         if status != self._driver.MI_OK:
             raise Exception("Could not call anti collision successfully!", status, uid)
 
-        return self._uid_to_num(uid)
+        return self._uid_to_num(uid), self._readData(uid)
+
+
+    def _readData(self, uid):
+        self._driver.MFRC522_SelectTag(uid)
+        status = self._driver.MFRC522_Auth(self._driver.PICC_AUTHENT1A, 11, self.Key, uid)
+        data = []
+        if status == self._driver.MI_OK:
+            for block_num in self.BlockAddrs:
+                block = self._driver.MFRC522_Read(block_num) 
+                if block:
+                    data += block
+        self._driver.MFRC522_StopCrypto1()
+
+        return ''.join(chr(i) for i in data)
 
 
     def _checkIfCardPresent(self):
