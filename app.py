@@ -17,9 +17,11 @@ CERT_PEM_PATH = os.environ['CERT_PEM_PATH']
 CERT_KEY_PATH = os.environ['CERT_KEY_PATH']
 
 awsHelper = CredentialsProvider(AWS_IOT_CREDS_URL, (CERT_PEM_PATH, CERT_KEY_PATH))
-
+stream = None  # This is a global variable, since we are using one stream at a time consier a singleton object
 
 def play(sender, uid, data):
+    global stream
+
     try:
         obj = json.loads(data)
     
@@ -48,6 +50,14 @@ def play(sender, uid, data):
         print("RFID tag is not valid!")
 
 
+def stop(self, uid):
+    global stream
+
+    pygame.mixer.music.stop()
+    stream.close()
+
+
+
 try:
     pygame.init()
     pygame.mixer.init()
@@ -58,15 +68,11 @@ try:
 
     rfid = RFID(driver)
 
-    def newCardDetected(sender, uid, data):
-        print("New card has detected: %s (%s)" % (uid, data))
-
-
-    rfid.onNewCardDetected += newCardDetected
+    rfid.onNewCardDetected += lambda sender, uid, data: print("New card has detected: %s (%s)" % (uid, data))
     rfid.onNewCardDetected += play
 
     rfid.onCardRemoved += lambda sender, uid: print("Card %s has removed!" % uid)
-    rfid.onCardRemoved += lambda sender, uid: pygame.mixer.music.stop()
+    rfid.onCardRemoved += stop
 
     # rfid.onCardStillPresent += lambda sender, uid: print("Card %s is still there!" % uid)
     rfid.start()

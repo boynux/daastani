@@ -19,3 +19,5 @@ class Stream(object):
         else:
             return self.file.raw.read()
 
+    def close(self):
+        self._file.close()
