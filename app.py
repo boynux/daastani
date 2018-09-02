@@ -50,14 +50,6 @@ def play(sender, uid, data):
         print("RFID tag is not valid!")
 
 
-def stop(self, uid):
-    global stream
-
-    pygame.mixer.music.stop()
-    stream.close()
-
-
-
 try:
     pygame.init()
     pygame.mixer.init()
@@ -72,9 +64,9 @@ try:
     rfid.onNewCardDetected += play
 
     rfid.onCardRemoved += lambda sender, uid: print("Card %s has removed!" % uid)
-    rfid.onCardRemoved += stop
+    rfid.onCardRemoved += lambda sender, uid: stream.stop()
 
-    # rfid.onCardStillPresent += lambda sender, uid: print("Card %s is still there!" % uid)
+    rfid.onCardStillPresent += lambda sender, uid: print("Card %s is still there!" % uid)
     rfid.start()
 
 except Exception:
