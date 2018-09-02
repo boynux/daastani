@@ -10,28 +10,13 @@ import RPi.GPIO as GPIO
 import MFRC522
 import pygame
 
-from lib import RFID, Stream
+from lib import RFID, Stream, CredentialsProvider
 
 AWS_IOT_CREDS_URL = os.environ['AWS_IOT_CREDS_URL']
 CERT_PEM_PATH = os.environ['CERT_PEM_PATH']
 CERT_KEY_PATH = os.environ['CERT_KEY_PATH']
 
-pygame.init()
-pygame.mixer.init()
-
-res = requests.get(AWS_IOT_CREDS_URL, cert=(CERT_PEM_PATH, CERT_KEY_PATH))
-
-creds = res.json()
-# Or via the Session
-session = boto3.Session(
-    aws_access_key_id=creds['credentials']['accessKeyId'],
-    aws_secret_access_key=creds['credentials']['secretAccessKey'],
-    aws_session_token=creds['credentials']['sessionToken']
-)
-
-# s3resource = session.resource('s3')
-# bucket = s3resource.Bucket('daastani')
-s3 = session.client('s3', region_name='eu-central-1')
+awsHelper = CredentialsProvider(AWS_IOT_CREDS_URL, (CERT_PEM_PATH, CERT_KEY_PATH))
 
 
 def play(sender, uid, data):
@@ -39,6 +24,9 @@ def play(sender, uid, data):
         obj = json.loads(data)
     
         if 'key' in obj:
+            session = awsHelper.getSession()
+            s3 = session.client('s3', region_name='eu-central-1')
+
             signedUrl = s3.generate_presigned_url(
                 ClientMethod = "get_object",
                 ExpiresIn = 3600,
@@ -61,6 +49,8 @@ def play(sender, uid, data):
 
 
 try:
+    pygame.init()
+    pygame.mixer.init()
     pygame.mixer.music.set_volume(1.0)
 
     driver = MFRC522.MFRC522();
