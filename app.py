@@ -10,7 +10,7 @@ import RPi.GPIO as GPIO
 import MFRC522
 import pygame
 
-from lib import RFID, Stream, CredentialsProvider
+from lib import RFID, Stream, CredentialsProvider, CollisionException
 
 AWS_IOT_CREDS_URL = os.environ['AWS_IOT_CREDS_URL']
 CERT_PEM_PATH = os.environ['CERT_PEM_PATH']
@@ -64,10 +64,15 @@ try:
     rfid.onNewCardDetected += play
 
     rfid.onCardRemoved += lambda sender, uid: print("Card %s has removed!" % uid)
-    rfid.onCardRemoved += lambda sender, uid: stream.stop()
+    rfid.onCardRemoved += lambda sender, uid: stream.close()
 
-    rfid.onCardStillPresent += lambda sender, uid: print("Card %s is still there!" % uid)
+    # rfid.onCardStillPresent += lambda sender, uid: print("Card %s is still there!" % uid)
+
+    print("Waiting for tag ...")
     rfid.start()
+
+except CollisionException as e:
+    print(e)
 
 except Exception:
     raise

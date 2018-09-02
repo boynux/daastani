@@ -2,6 +2,8 @@ import time
 
 from lib.event import Event
 
+class CollisionException(Exception):
+    pass
 
 class RFID:
 
@@ -41,7 +43,7 @@ class RFID:
 
         status, uid = self._driver.MFRC522_Anticoll()
         if status != self._driver.MI_OK:
-            raise Exception("Could not call anti collision successfully!", status, uid)
+            raise CollisionException("Could not call anti collision successfully!", status, uid)
 
         return self._uid_to_num(uid), self._readData(uid)
 
