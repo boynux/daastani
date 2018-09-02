@@ -4,10 +4,6 @@ class Stream(object):
     default_options = {}
 
     def __init__(self, url, options = {}):
-        self._url = url
-        self._buffer = ''
-        self._position = 0
-
         self._options = self.default_options
         self._options.update(options)
 

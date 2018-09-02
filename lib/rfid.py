@@ -27,9 +27,9 @@ class RFID:
 
             self._newCardDetected(uid, data)
             while True:
+                time.sleep(0.3)
                 if self._checkIfCardPresent():
                     self._cardStillPresent(uid)
-                    time.sleep(0.1)
                 else:
                     self._cardIsRemoved(uid)
                     break

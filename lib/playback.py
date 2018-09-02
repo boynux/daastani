@@ -1,3 +1,5 @@
+import time
+
 from lib import Stream
 
 class Playback(object):
@@ -5,7 +7,6 @@ class Playback(object):
         self._stream = None
         self._awsHelper = awsHelper
         self._mixer = mixer
-        pass
 
     def play(self, streams):
         if self._queueStreams(streams):
@@ -15,7 +16,6 @@ class Playback(object):
     def stop(self):
         if self._stream:
             self._stream.close()
-            del self._stream
 
     def _queueStreams(self, streams):
         if not streams:
@@ -26,7 +26,7 @@ class Playback(object):
 
         signedUrl = s3.generate_presigned_url(
             ClientMethod = "get_object",
-            ExpiresIn = 3600,
+            ExpiresIn = 1800,
             HttpMethod = 'GET',
             Params = {
                 "Bucket": "daastani",
@@ -34,6 +34,7 @@ class Playback(object):
                 }
             )
 
+        print(signedUrl)
         self._stream = Stream(signedUrl)
 
         return True

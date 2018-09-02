@@ -34,7 +34,7 @@ class CredentialsProvider(object):
         return self._session
 
 
-    def _isAboutToExpire(self, seconds = 300):
+    def _isAboutToExpire(self, seconds = 900):
         delta = datetime.datetime.now() - self._expiration
         
-        return delta.seconds < seconds
+        return delta.total_seconds() < seconds
