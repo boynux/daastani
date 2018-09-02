@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from __future__ import print_function
 
 import os
@@ -16,7 +18,7 @@ CERT_PEM_PATH = os.environ['CERT_PEM_PATH']
 CERT_KEY_PATH = os.environ['CERT_KEY_PATH']
 
 
-try:
+def main():
     # initialiations
     pygame.init()
     pygame.mixer.init()
@@ -42,14 +44,18 @@ try:
     print("Waiting for tag ...")
     rfid.start()
 
-except CollisionException as e:
-    print(e)
 
-except Exception:
-    raise
+if __name__ == "__main__":
+    try:
+        main()
+    except CollisionException as e:
+        print(e)
 
-finally:
-    GPIO.cleanup()
-    pygame.mixer.music.stop()
+    except Exception:
+        raise
+
+    finally:
+        GPIO.cleanup()
+        pygame.mixer.music.stop()
 
 
