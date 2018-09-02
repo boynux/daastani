@@ -7,7 +7,7 @@ Daastani is a simple application which turns a RaspberryPi into a Jukebox, I cre
 
 ## Prototype
 
-[![Watch this video](https://i.ytimg.com/vi/u3LzA0zzYi4/0.jpg)](https://www.youtube.com/embed/u3LzA0zzYi4")
+[![Watch this video](https://i.ytimg.com/vi/u3LzA0zzYi4/0.jpg)](https://www.youtube.com/watch?v=u3LzA0zzYi4")
 
 ## How it works?
 
