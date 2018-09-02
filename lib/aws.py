@@ -1,8 +1,6 @@
 import boto3
 import datetime
 import requests
-import time
-import dateutil.parser
 
 class CredentialsProvider(object):
     def __init__(self, url, certs):
@@ -17,7 +15,7 @@ class CredentialsProvider(object):
 
         creds = res.json()
         self._creds = creds['credentials']
-        self._expiration = time.strptime(self._creds['expiration'], '%Y-%m-%dT%H:%M:%SZ')
+        self._expiration = datetime.datetime.strptime(self._creds['expiration'], '%Y-%m-%dT%H:%M:%SZ')
 
         return self._creds
 
