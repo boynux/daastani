@@ -17,4 +17,4 @@ I put the whole device in a box with RFID read near the surface, then I attached
 
 ## Terminology
 
-Daastani means: Related to a story. Or Something that's worth to be told as a story!
+in Persian *Daastani* means: Related to a story. Or Something that's worth to be told as a story!
