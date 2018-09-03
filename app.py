@@ -10,7 +10,7 @@ import pygame
 
 import handlers
 
-from lib import RFID, Stream, CredentialsProvider, CollisionException, Playback
+from lib import RFID, CredentialsProvider, CollisionException, Playback
 
 
 AWS_IOT_CREDS_URL = os.environ['AWS_IOT_CREDS_URL']
@@ -24,8 +24,8 @@ def main():
     pygame.mixer.init()
     pygame.mixer.music.set_volume(1.0)
 
-    driver = MFRC522.MFRC522();
-    driver.MFRC522_Init();
+    driver = MFRC522.MFRC522()
+    driver.MFRC522_Init()
 
     rfid = RFID(driver)
 
@@ -57,5 +57,3 @@ if __name__ == "__main__":
     finally:
         GPIO.cleanup()
         pygame.mixer.music.stop()
-
-
