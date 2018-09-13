@@ -13,7 +13,8 @@ script:
   if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
     docker login -u="$DOCKER_USER" -p="$DOCKER_PASSWORD"
     TAG="armhf-$TRAVIS_BUILD_NUMBER"
-    docker tag hypriot/rpi-mysql boynux/daastani:$TAG
+    docker tag boynux/daastani boynux/daastani:$TAG
     docker push boynux/daastani:$TAG
+    docker tag boynux/daastani boynux/daastani:armhf-latest
     docker push boynux/daastani:armhf-latest
   fi
