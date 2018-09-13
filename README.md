@@ -1,5 +1,6 @@
-# Daastani
+[![Build Status](https://travis-ci.org/boynux/daastani.svg?branch=master)](https://travis-ci.org/boynux/daastani)
 
+# Daastani
 
 ## What's this?
 
@@ -8,6 +9,25 @@ Daastani is a simple application which turns a RaspberryPi into a Jukebox, I cre
 ## Prototype
 
 [![Watch this video](https://i.ytimg.com/vi/u3LzA0zzYi4/0.jpg)](https://www.youtube.com/watch?v=u3LzA0zzYi4")
+
+## How to run?
+
+You need:
+
+* RasspberryPi
+* Active Speaker or Amp + Speaker
+* SPI enabled
+* Docker installed
+* AWS IoT service configured
+* AWS IoT certs are copied to RPi to `/etc/daastani/certs`
+* The Following ENV vars in `/etc/default/daastani`
+  * AWS_IOT_CREDS_URL="https://<iot device id>.credentials.iot.<aws region>.amazonaws.com/role-aliases/<IAM Role name to access S3 bucket>/credentials"
+  * CERT_KEY_PATH="/etc/daastani/certs/daastani-private.pem.key"
+  * CERT_PEM_PATH="/etc/daastani/certs/daastani-certificate.pem.crt"
+
+
+  docker run --rm --name daastani -it --privileged --env-file /etc/default/daastani -v /etc/daastani/certs:/etc/daastani/certs --device=/dev/snd --group-add=audio --group-add=adm --group-add=997 --group-add=999  boynux/daastani:armhf-1
+
 
 ## How it works?
 
