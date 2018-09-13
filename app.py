@@ -3,6 +3,8 @@
 from __future__ import print_function
 
 import os
+import signal
+import sys
 
 import RPi.GPIO as GPIO
 import MFRC522
@@ -17,12 +19,16 @@ AWS_IOT_CREDS_URL = os.environ['AWS_IOT_CREDS_URL']
 CERT_PEM_PATH = os.environ['CERT_PEM_PATH']
 CERT_KEY_PATH = os.environ['CERT_KEY_PATH']
 
+def sigterm_handler(signo, stack_frame):
+    print("Stopping...")
+    sys.exit(0)
+
 
 def main():
     # initialiations
     pygame.init()
     pygame.mixer.init()
-    pygame.mixer.music.set_volume(1.0)
+    pygame.mixer.music.set_volume(0.5)
 
     driver = MFRC522.MFRC522();
     driver.MFRC522_Init();
@@ -46,6 +52,8 @@ def main():
 
 
 if __name__ == "__main__":
+    signal.signal(signal.SIGTERM, sigterm_handler)
+
     try:
         main()
     except CollisionException as e:
