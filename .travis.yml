@@ -1,0 +1,19 @@
+sudo: required
+env:
+  DOCKER_USER: boynux
+  DOCKER_PASS:
+    secure: l+rJrlmA+TjIVySxxQvbUlUYrREGToRhEyEPOzMWqBax8D/bdkQuKPEs1j4IPECYTBI7dMiVZy3wyVajuNk3z4I9VV40lIKodJkw6079u0JOYdfvbmsbI+c1swTsSfJFToIwc8X+m3W9YxCOds3RNAVXnGcYubeCdVVRSd4NjXzT9DoNXaukQkLuWF007ZCHuom3TYeBEbxSPjawEgOUAaBMT5yJQrmWyqD+djOO9W2DAM/jgAn03yFEl4E3vd16vISbv9PxrGemSq13YKp9Fa5PtmPOuujDACLnbdPpANXIFBJ+6JxtCJM60y51cSIXlgwXrCg7jeAXYYidAjvYb0z0y1P/DvWGBkWsfVK+BmFKegX06jg6oShvsEI7MO+1fv4JSmZFxMrxmFZs2VAdFdvT7SdZYgsfZdc/FzuXaqKFRJmkLUvmdmVREYDKn3MlUHjlzE1LZfSJeeqCEhnaSFFk5Bd8zfcBDZAqCP6kXJTrz3wrlGStSsAdpyXOrue/TNL6JoAGvTOHjdveY8hWs6zGUSemLsXp6/qBIktRRGnmdFsSMyRXZyOxWP8phSig+oZETHxFy2RxZwP7F5P1t3hZrOKN0STKaJ4gqtpcfhrsaEXiQ/7uwPM6ppavBkb4H5FvjIzejyeZZpZ8X3SzwfeXfgSzDi/g5FoNDZJvhgg=
+services:
+- docker
+language: bash
+script:
+- docker run --rm --privileged multiarch/qemu-user-static:register --reset
+- docker build -t boynux/daastani .
+- >
+  if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+    docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
+    TAG="armhf-$TRAVIS_BUILD_NUMBER"
+    docker tag hypriot/rpi-mysql boynux/daastani:$TAG
+    docker push boynux/daastani:$TAG
+    docker push boynux/daastani
+  fi

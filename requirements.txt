@@ -1,4 +1,2 @@
-pygame
-RPi
 requests
 boto3
