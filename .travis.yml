@@ -1,17 +1,17 @@
 sudo: required
 env:
-  DOCKER_USER: boynux
-  DOCKER_PASS:
-    secure: l+rJrlmA+TjIVySxxQvbUlUYrREGToRhEyEPOzMWqBax8D/bdkQuKPEs1j4IPECYTBI7dMiVZy3wyVajuNk3z4I9VV40lIKodJkw6079u0JOYdfvbmsbI+c1swTsSfJFToIwc8X+m3W9YxCOds3RNAVXnGcYubeCdVVRSd4NjXzT9DoNXaukQkLuWF007ZCHuom3TYeBEbxSPjawEgOUAaBMT5yJQrmWyqD+djOO9W2DAM/jgAn03yFEl4E3vd16vISbv9PxrGemSq13YKp9Fa5PtmPOuujDACLnbdPpANXIFBJ+6JxtCJM60y51cSIXlgwXrCg7jeAXYYidAjvYb0z0y1P/DvWGBkWsfVK+BmFKegX06jg6oShvsEI7MO+1fv4JSmZFxMrxmFZs2VAdFdvT7SdZYgsfZdc/FzuXaqKFRJmkLUvmdmVREYDKn3MlUHjlzE1LZfSJeeqCEhnaSFFk5Bd8zfcBDZAqCP6kXJTrz3wrlGStSsAdpyXOrue/TNL6JoAGvTOHjdveY8hWs6zGUSemLsXp6/qBIktRRGnmdFsSMyRXZyOxWP8phSig+oZETHxFy2RxZwP7F5P1t3hZrOKN0STKaJ4gqtpcfhrsaEXiQ/7uwPM6ppavBkb4H5FvjIzejyeZZpZ8X3SzwfeXfgSzDi/g5FoNDZJvhgg=
+  global:
+  - DOCKER_USER=boynux
+  - secure: JEL+fVC7tZZGHDHfVG0WQWyU6K93zRNOLB5ioBlfzGw9nQHY01EtW1WYFAPS6wvrL8wggIk9MZ5rIm4xHlvY+8BAXv4IyhhWnfTWInQaBVxh+LhfzrE0cSriK69NSbuSUlwIcKypSy9HtkIyq1iposep1UM3RNsaAW4IIJSm+qio5nE2sRAxcptfcTwCfxIJvQt7r0UaqzkSU77gE4TZUepd2ZBC5gz3Qs5rqvimGi6UDrNnxrwYg0xVAEZhg7ph5WVbHA36dyMoZ3kQASYQWg6spyLz1loLSZ4EO7dvA8r6xTjkVpboqVTL4sUZMeaEcbQNBNxl6iAUHmOTeOafvlgQnYawxThcO2A7cFdGRWXAMGDujPYhvFiqA59V2C9mzSY9MRb1N9iKU3xDiPz+T9jHUyYvEglOyTGx0OL4uNWUxYYstTVk+wGbVMlXAmFlLBo2QqE8Sqx/DgnqUVl/nDacY+jTRHBbXxj/xIsNHG2wSBcQoPYeCI38rinfV1YTWbSncqxdSgum77QOdryfNi5PCxZShUd4zRV9xOPi4GHdxCc1QINGt/OjoMKe2BuFPGDr9QBD4Ftu+b0sx6Xz0QF4/d4ZVyvJH64mJiADRYySCz3QPPd3JdaoK76V9ltuIZVuIrQQBbI7lUNkRpseMsdUXH7A/je7GssOkkfoh5o=
 services:
 - docker
 language: bash
 script:
 - docker run --rm --privileged multiarch/qemu-user-static:register --reset
 - docker build -t boynux/daastani .
-- >
+- |
   if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-    docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
+    docker login -u="$DOCKER_USER" -p="$DOCKER_PASSWORD"
     TAG="armhf-$TRAVIS_BUILD_NUMBER"
     docker tag hypriot/rpi-mysql boynux/daastani:$TAG
     docker push boynux/daastani:$TAG
