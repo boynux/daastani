@@ -2,6 +2,7 @@ import boto3
 import datetime
 import requests
 
+
 class CredentialsProvider(object):
     def __init__(self, url, certs):
         self.url = url
@@ -33,8 +34,7 @@ class CredentialsProvider(object):
 
         return self._session
 
-
-    def _isAboutToExpire(self, seconds = 900):
+    def _isAboutToExpire(self, seconds=900):
         delta = datetime.datetime.now() - self._expiration
-        
+
         return delta.total_seconds() < seconds

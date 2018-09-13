@@ -1,10 +1,11 @@
 import json
 
+
 def playHandler(playback):
     def play(sender, uid, data):
         try:
             obj = json.loads(data)
-        
+
             if 'key' in obj and obj['key']:
                 playback.play(obj['key'])
             else:
@@ -21,4 +22,3 @@ def stopHandler(playback):
         playback.stop()
 
     return stop
-
