@@ -15,5 +15,5 @@ script:
     TAG="armhf-$TRAVIS_BUILD_NUMBER"
     docker tag hypriot/rpi-mysql boynux/daastani:$TAG
     docker push boynux/daastani:$TAG
-    docker push boynux/daastani
+    docker push boynux/daastani:armhf-latest
   fi
