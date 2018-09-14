@@ -1,6 +1,5 @@
-import time
-
 from lib import Stream
+
 
 class Playback(object):
     def __init__(self, awsHelper, mixer):
@@ -25,18 +24,16 @@ class Playback(object):
         s3 = session.client('s3', region_name='eu-central-1')
 
         signedUrl = s3.generate_presigned_url(
-            ClientMethod = "get_object",
-            ExpiresIn = 1800,
-            HttpMethod = 'GET',
-            Params = {
+            ClientMethod="get_object",
+            ExpiresIn=1800,
+            HttpMethod='GET',
+            Params={
                 "Bucket": "daastani",
                 "Key": streams,
-                }
-            )
+            }
+        )
 
         print(signedUrl)
         self._stream = Stream(signedUrl)
 
         return True
-
-

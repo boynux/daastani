@@ -1,9 +1,10 @@
 import requests
 
+
 class Stream(object):
     default_options = {}
 
-    def __init__(self, url, options = {}):
+    def __init__(self, url, options={}):
         self._options = self.default_options
         self._options.update(options)
 
