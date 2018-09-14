@@ -1,17 +1,18 @@
 import json
 
+
 def playHandler(playback):
     def play(sender, uid, data):
         try:
-            obj = json.loads(data)
-        
+            obj = json.loads(data.strip())
+
             if 'key' in obj and obj['key']:
                 playback.play(obj['key'])
             else:
-                print("RFID tag is not valid!")
+                print("RFID tag is not valid!", obj)
 
-        except ValueError:
-            print("RFID tag is not valid!")
+        except ValueError as e:
+            print("RFID tag is not valid!", e)
 
     return play
 
@@ -21,4 +22,3 @@ def stopHandler(playback):
         playback.stop()
 
     return stop
-
