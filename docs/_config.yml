@@ -1,4 +1,5 @@
-theme: jekyll-theme-slate
+# theme: jekyll-theme-slate
+remote_theme: "mmistakes/minimal-mistakes"
 title: Daastani
 defaults:
   - scope:
