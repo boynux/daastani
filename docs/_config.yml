@@ -11,6 +11,11 @@ defaults:
       # classes: wide
       toc: true
       
+author:
+  name     : "Daastani"
+  avatar   : "/assets/images/sheep.png"
+  bio      : "Story box"
+      
 repository: "boynux/daastani"
 search: true
 
