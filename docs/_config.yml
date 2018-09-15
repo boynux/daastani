@@ -1,12 +1,14 @@
 # theme: jekyll-theme-slate
 remote_theme: "mmistakes/minimal-mistakes"
 title: Daastani
+teaser: /assets/images/500x300.png
+
 defaults:
   - scope:
       path: ""
-    values:
-      layout: single
-      classes: wide
+    # values:
+      # layout: single
+      # classes: wide
       
 repository: "boynux/daastani"
 search: true
