@@ -7,3 +7,7 @@ defaults:
     values:
       layout: single
       classes: wide
+      
+repository: "boynux/daastani"
+search: true
+
