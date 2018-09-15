@@ -14,7 +14,7 @@ defaults:
       
 author:
   name: "Daastani"
-  avatar: "/assets/images/sheep.png"
+  avatar: "https://raw.githubusercontent.com/boynux/daastani/master/docs/assests/images/sheep.png"
   bio: "Story box"
       
 repository: "boynux/daastani"
