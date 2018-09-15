@@ -2,6 +2,8 @@
 title: Daastani
 ---
 
+<img src="https://raw.githubusercontent.com/boynux/daastani/master/docs/assests/images/sheep.png" width="100" alt="Sheep Logo" />
+
 # Intro
 
 I have a 6 years old son, like any other kid at this age, ke likes listening to bed time stories.
