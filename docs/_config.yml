@@ -2,6 +2,6 @@ theme: jekyll-theme-slate
 title: Daastani
 defaults:
   - scope:
-    path: ""
-  values:
-    layout: single
+      path: ""
+    values:
+      layout: single
