@@ -1,7 +1,3 @@
----
-title: Daastani
----
-
 # Intro
 
 I have a 6 years old son, like any other kid at this age, ke likes listening to bed time stories.
