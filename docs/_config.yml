@@ -10,6 +10,7 @@ defaults:
       layout: single
       # classes: wide
       toc: true
+      author_profile: true
       
 author:
   name: "Daastani"
