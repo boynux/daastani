@@ -1,4 +1,4 @@
-## You need the following items to build this project:
+# You need the following items to build this project:
 
 * 1 x [RaspberryPi unit (model 3 or zero)](https://www.adafruit.com/product/3708) ~ €14
 * 1 x [SD Card 8+ GB](https://www.google.de/search?tbm=shop&q=sd+card+9gb) ~ €4
