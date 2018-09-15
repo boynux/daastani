@@ -51,6 +51,7 @@ I also used hot glue gun to fix parts in their place firmly.
 
 All items except battery and powr supply should cost you about €30 or cheaper.
 
+
 # How to build it?
 
 I'll publish a step by step guide soon. Be patient!
