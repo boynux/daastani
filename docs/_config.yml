@@ -6,3 +6,4 @@ defaults:
       path: ""
     values:
       layout: single
+      classes: wide
