@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: slate
 title: Daastani Story Box
 ---
 
