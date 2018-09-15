@@ -42,3 +42,5 @@ I also used hot glue gun to fix parts in their place firmly.
 
 I'll publish a step by step guide soon. Be patient!
 
+[Next page - Prerequisites](/prerequisites/)
+
