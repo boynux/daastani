@@ -6,9 +6,10 @@ teaser: /assets/images/500x300.png
 defaults:
   - scope:
       path: ""
-    # values:
+    values:
       # layout: single
       # classes: wide
+      toc: true
       
 repository: "boynux/daastani"
 search: true
