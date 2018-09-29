@@ -68,5 +68,22 @@ The fun part begins ....
 
 ## Make some wiring mess
 
+There are two components to connect to your Pi:
+
+### Adafruit I2S MAX98357A Amplifier
+
+Follow the [official instructions](https://learn.adafruit.com/adafruit-max98357-i2s-class-d-mono-amp/assembly) to connect the amplifier. Make sure you complete the installations of drivers as well.
+
+When you finished the installation you should be able to play some test sounds using your Raspberry Pi, like:
+
+`speaker-test -c2 --test=wav -w /usr/share/sounds/alsa/Front_Center.wav`
+
+### MFRC522 RFID reader
+
+There are several tutorials online on how to install the RFID reader to RPi. I recommend this post: [How to setup a Raspberry Pi RFID RC522 Chip](https://pimylifeup.com/raspberry-pi-rfid-rc522/)
+
+If you ran into any issues with the setup, leave me a comment, but it should be easy and straight forward.
+
+## Install Daastani
 
 To be continued ...
