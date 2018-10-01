@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/boynux/daastani.svg?branch=master)](https://travis-ci.org/boynux/daastani)
 
+![Daastani](https://raw.githubusercontent.com/boynux/daastani/master/docs/assests/images/sheep.png)
+
 # Daastani
 
 ## What's this?
