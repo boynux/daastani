@@ -1,2 +1,5 @@
 requests
 boto3
+spi
+# pygame
+miniaudio

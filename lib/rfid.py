@@ -1,4 +1,5 @@
 import time
+import asyncio
 
 from lib.event import Event
 
@@ -19,34 +20,39 @@ class RFID:
         self.onCardRemoved = Event()
         self.onCardStillPresent = Event()
 
-    def start(self):
+    async def start(self):
         while True:
-            time.sleep(0.1)  # replace with timer
+            # time.sleep(0.1)  # replace with timer
 
-            uid, data = self._waitForNewCard()
-            if not uid:
+            uid, data = await self._async_waitForNewCard()
+            # if not uid:
+            #    continue
+
+            await self._newCardDetected(uid, data)
+            # while True:
+            #     time.sleep(0.3)
+            #    if self._checkIfCardPresent():
+            await self._async_cardRemoved()
+            await self._cardIsRemoved(uid)
+            #         self._cardStillPresent(uid)
+            #    else:
+            #        self._cardIsRemoved(uid)
+            #        break
+
+    async def _async_waitForNewCard(self):
+        while True:
+            status, bits = self._driver.MFRC522_Request(self._driver.PICC_REQIDL)
+
+            if status != self._driver.MI_OK:
+                # return None, None
+                await asyncio.sleep(0.3)
                 continue
 
-            self._newCardDetected(uid, data)
-            while True:
-                time.sleep(0.3)
-                if self._checkIfCardPresent():
-                    self._cardStillPresent(uid)
-                else:
-                    self._cardIsRemoved(uid)
-                    break
+            status, uid = self._driver.MFRC522_Anticoll()
+            if status != self._driver.MI_OK:
+                raise CollisionException("Could not call anti collision successfully!", status, uid)
 
-    def _waitForNewCard(self):
-        status, bits = self._driver.MFRC522_Request(self._driver.PICC_REQIDL)
-
-        if status != self._driver.MI_OK:
-            return None, None
-
-        status, uid = self._driver.MFRC522_Anticoll()
-        if status != self._driver.MI_OK:
-            raise CollisionException("Could not call anti collision successfully!", status, uid)
-
-        return self._uid_to_num(uid), self._readData(uid)
+            return self._uid_to_num(uid), self._readData(uid)
 
     def _readData(self, uid):
         self._driver.MFRC522_SelectTag(uid)
@@ -60,6 +66,13 @@ class RFID:
         self._driver.MFRC522_StopCrypto1()
 
         return ''.join(chr(i) for i in data)
+
+    async def _async_cardRemoved(self):
+        while True:
+            if self._checkIfCardPresent():
+                await asyncio.sleep(0.5)
+            else:
+                return
 
     def _checkIfCardPresent(self):
         control = 0x1
@@ -79,11 +92,11 @@ class RFID:
         else:
             return False
 
-    def _newCardDetected(self, *args):
-        self.onNewCardDetected(self, args)
+    async def _newCardDetected(self, *args):
+        await asyncio.gather(*self.onNewCardDetected(self, args))
 
-    def _cardIsRemoved(self, *args):
-        self.onCardRemoved(self, args)
+    async def _cardIsRemoved(self, *args):
+        await asyncio.gather(*self.onCardRemoved(self, args))
 
     def _cardStillPresent(self, *args):
         self.onCardStillPresent(self, args)

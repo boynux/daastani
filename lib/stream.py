@@ -1,5 +1,5 @@
 import requests
-
+import tempfile
 
 class Stream(object):
     default_options = {}
@@ -9,12 +9,16 @@ class Stream(object):
         self._options.update(options)
 
         self._file = requests.get(url, stream=True)
+        # self._tempfile = tempfile.NamedTemoraryFile()
 
     def read(self, *args):
+        print('reading ...')
         if args:
-            return self._file.raw.read(args[0])
+            yield self._file.raw.read(args[0])
         else:
-            return self.file.raw.read()
+            yield self.file.raw.read()
 
+        return generator()
     def close(self):
         self._file.close()
+        # self._tempfile.close()
