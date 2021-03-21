@@ -93,13 +93,15 @@ class RFID:
             return False
 
     async def _newCardDetected(self, *args):
-        await asyncio.gather(*self.onNewCardDetected(self, args))
+        # await asyncio.gather(*self.onNewCardDetected(self, args))
+        await self.onNewCardDetected(self, args)
 
     async def _cardIsRemoved(self, *args):
-        await asyncio.gather(*self.onCardRemoved(self, args))
+        # await asyncio.gather(*self.onCardRemoved(self, args))
+        await self.onCardRemoved(self, args)
 
-    def _cardStillPresent(self, *args):
-        self.onCardStillPresent(self, args)
+    async def _cardStillPresent(self, *args):
+        await self.onCardStillPresent(self, args)
 
     def _uid_to_num(self, uid):
         n = 0

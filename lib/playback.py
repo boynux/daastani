@@ -3,46 +3,49 @@ import asyncio
 import os
 import time
 
-from lib import Stream
+from lib import CachedStream
 
 class Playback(object):
-    def __init__(self, awsHelper, mixer):
-        self._stream = None
+    def __init__(self, awsHelper, cache):
         self._awsHelper = awsHelper
-        self._mixer = mixer
-        self._player = None
-        self._source = None
-        self._stop = False
         self._device = miniaudio.PlaybackDevice()
 
+    def data_path(self, filename):
+        return os.path.join(os.path.abspath(os.path.dirname(__file__) + '/../'), 'data', filename)
 
-    def samples_path(self, filename):
-        return os.path.join(os.path.abspath(os.path.dirname(__file__)), 'samples', filename)
-
-    def play(self, streams):
+    def get_encoding(self, filename):
         encoding = miniaudio.FileFormat.MP3
-        ext = streams.split('.')[-1]
+        ext = filename.split('.')[-1]
         if ext.lower() == 'ogg':
             encoding = miniaudio.FileFormat.VORBIS
 
-        url =  self._queueStreams(streams)
-        if url:
-            self._source = miniaudio.IceCastClient(url)
-            stream = miniaudio.stream_any(self._source, encoding)
-            # stream = miniaudio.stream_file(self.samples_path("music.mp3"))
+        return encoding
+
+    def get_stream(self, streams: object):
+        if isinstance(streams, miniaudio.StreamableSource):
+            return miniaudio.stream_any(streams, streams.getEncoding())
+        if os.path.isfile(streams):
+            return miniaudio.stream_file(streams)
+        elif os.path.isfile(self.data_path(streams)):
+            return miniaudio.stream_file(self.data_path(streams))
+        else:
+            url =  self._queueStreams(streams)
+            if url:
+                self._source = miniaudio.IceCastClient(url)
+                return miniaudio.stream_any(self._source, self.get_encoding(streams))
+            return None
+
+    async def play(self, streams):
+        stream = self.get_stream(streams)
+        if stream:
             print('playing ...')
             self._device.start(stream)
                 
-            # self._mixer.load(self._stream)
-            # self._mixer.play()
-
-    def stop(self):
+    async def stop(self):
         print('stopping ...')
         if self._device:
             self._device.stop()
 
-        if self._source:
-            self._source.close()
     def _queueStreams(self, streams):
         if not streams:
             return False
@@ -61,6 +64,6 @@ class Playback(object):
         )
 
         print(signedUrl)
-        self._stream = Stream(signedUrl)
+        self._stream = CachedStream(signedUrl)
 
         return signedUrl

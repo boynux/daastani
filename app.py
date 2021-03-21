@@ -16,7 +16,7 @@ import time
 import asyncio
 from functools import wraps, partial
 
-from lib import RFID, CredentialsProvider, CollisionException, Playback
+from lib import RFID, CredentialsProvider, CollisionException, Playback, Cache
 
 
 AWS_IOT_CREDS_URL = os.environ['AWS_IOT_CREDS_URL']
@@ -40,18 +40,13 @@ def async_wrap(func):
 
 
 async def main():
-    # initialiations
-    # pygame.init()
-    # pygame.mixer.init()
-    # pygame.mixer.music.set_volume(1.0)
-
     driver = MFRC522.MFRC522()
     driver.MFRC522_Init()
 
     rfid = RFID(driver)
 
     awsHelper = CredentialsProvider(AWS_IOT_CREDS_URL, (CERT_PEM_PATH, CERT_KEY_PATH))
-    playback = Playback(awsHelper, None) # pygame.mixer.music)
+    playback = Cache(awsHelper, Playback(awsHelper, None), asyncio.get_event_loop()) # pygame.mixer.music)
 
     # Event handers
     # rfid.onNewCardDetected += lambda sender, uid, data: print("New card has detected: %s (%s)" % (uid, data))
@@ -63,6 +58,11 @@ async def main():
     # rfid.onCardStillPresent += lambda sender, uid: print("Card %s is still there!" % uid)
 
     print("Waiting for tag ...")
+
+    await playback.play('ta-da-chimes-sound-effect.mp3')
+    await asyncio.sleep(2)
+    await playback.stop()
+
     await rfid.start()
 
 
@@ -77,6 +77,9 @@ if __name__ == "__main__":
         print(f"Time elapse: {end-start}")
     except CollisionException as e:
         print(e)
+
+    except KeyboardInterrupt:
+        exit(0)
 
     except Exception:
         raise
